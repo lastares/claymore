@@ -1,7 +1,6 @@
 package stringutil
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -31,7 +30,6 @@ func TestSubstr(t *testing.T) {
 
 	for _, tc := range testCases {
 		got := Substr(tc.str, tc.start, tc.length)
-		fmt.Println(got)
 		if got != tc.want {
 			t.Errorf("Substr(%q, %d, %d) = %q; want %q", tc.str, tc.start, tc.length, got, tc.want)
 		}
