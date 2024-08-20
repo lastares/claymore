@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -95,4 +96,9 @@ func GetBaseFullName(filePath string, f func(filePath string) string) string {
 	}
 	// 返回文件的基础名称
 	return baseName
+}
+
+// GetExtension 获取文件扩展名
+func GetExtension(filepath string) string {
+	return path.Ext(filepath)
 }

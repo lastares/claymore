@@ -54,3 +54,23 @@ func TestGetBaseFullName(t *testing.T) {
 		})
 	}
 }
+
+func TestGetExtension(t *testing.T) {
+	tests := []struct {
+		filepath string
+		want     string
+	}{
+		{"https://www.baidu.com/xxx/test.txt", ".txt"},
+		{"test.txt", ".txt"},
+		{"test", ""},
+		{"", ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.filepath, func(t *testing.T) {
+			if got := GetExtension(tt.filepath); got != tt.want {
+				t.Errorf("GetExtension() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
