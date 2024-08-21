@@ -28,6 +28,7 @@ func TestGetBaseFullName(t *testing.T) {
 		{filePath: "/usr/bin", f: nil, want: "bin"},
 		{filePath: "/usr/bin/", f: nil, want: "bin"},
 		{filePath: "/usr/bin/vim", f: nil, want: "vim"},
+		{filePath: "/usr/bin/vim/aa.txt", f: nil, want: "aa.txt"},
 		{filePath: "C:\\Program%20Files\\", f: nil, want: "Program%20Files"},
 		{filePath: "/home/user/documents/report.txt", f: nil, want: "report.txt"},
 		{filePath: "C:\\Windows\\System32\\notepad.exe", f: nil, want: "notepad.exe"},
