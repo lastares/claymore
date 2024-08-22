@@ -5,11 +5,11 @@ import (
 	"testing"
 )
 
-func TestDownloadFile(t *testing.T) {
+func TestDownload(t *testing.T) {
 	testUrl := "http://iph.href.lu/579x200"
 	testFilePath := "./testfile"
 	// Execute
-	err := DownloadFile(testUrl, testFilePath)
+	err := Download(testUrl, testFilePath)
 	// Verify
 	if err != nil {
 		t.Errorf("Failed to download file: %s", err)

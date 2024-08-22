@@ -9,11 +9,11 @@ import (
 	"strings"
 )
 
-// DownloadFile 从指定URL下载文件到本地路径。
+// Download 从指定URL下载文件到本地路径。
 // url: 文件的URL地址。
 // filepath: 本地保存文件的路径。
 // 返回值: 如果下载过程中发生错误，返回相应的错误；如果成功，返回nil。
-func DownloadFile(url, filepath string) error {
+func Download(url, filepath string) error {
 	// 定义局部变量
 	var (
 		out     *os.File
