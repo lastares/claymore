@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -21,10 +22,72 @@ const (
 	NoEncodingFlag              = 0
 )
 
+// Zip 函数将源目录下的所有文件和子目录压缩到目标目录中。
+// 参数 srcDir 是待压缩的源目录路径。
+// 参数 destDir 是压缩后的目标目录路径。
+// 返回error，表示压缩过程中可能发生的错误。
+func Zip(srcDir string, destDir string) error {
+	// 删除目标目录，以确保创建新的压缩文件。
+	_ = os.RemoveAll(destDir)
+	// 创建压缩文件。
+	zf, err := os.Create(destDir)
+	if err != nil {
+		return err
+	}
+	// 确保在函数结束时关闭压缩文件。
+	defer func() { _ = zf.Close() }()
+	// 初始化压缩文件的写入器。
+	archive := zip.NewWriter(zf)
+	// 确保在函数结束时关闭写入器。
+	defer func() { _ = archive.Close() }()
+	// 遍历源目录，将每个文件和子目录添加到压缩文件中。
+	return filepath.Walk(srcDir, func(path string, info os.FileInfo, _ error) error {
+		// 跳过源目录本身，只压缩其内容。
+		if path == srcDir {
+			return nil
+		}
+		// 根据文件信息创建压缩条目。
+		header, err := zip.FileInfoHeader(info)
+		if err != nil {
+			return err
+		}
+		// 调整文件路径，以确保在压缩文件中的相对路径是正确的。
+		header.Name = strings.TrimPrefix(path, srcDir+string(os.PathSeparator))
+		// 如果是目录，确保文件名以斜杠结尾。
+		if info.IsDir() {
+			header.Name += `/`
+		} else {
+			// 设置文件的压缩方法为Deflate。
+			header.Method = zip.Deflate
+		}
+		// 创建压缩条目的实际写入器。
+		writer, err := archive.CreateHeader(header)
+		if err != nil {
+			return err
+		}
+		// 如果不是目录，则打开文件并将其内容写入压缩文件。
+		if !info.IsDir() {
+			file, err := os.Open(path)
+			if err != nil {
+				return err
+			}
+			// 确保在函数结束时关闭打开的文件。
+			defer func() { _ = file.Close() }()
+			_, err = io.Copy(writer, file)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}
+
 // Unzip 解压缩指定的zip文件到目标目录
 // zipFileName 是要解压缩的zip文件路径
 // targetDirectory 是解压缩后文件存放的目标目录,如果目标目录参数为空，则将其默认设置为ZIP文件名所在目录。
 func Unzip(zipFileName string, targetDirectory string) error {
+	// url.QueryUnescape 用于解码URL编码的字符串，防止出现错误
+	zipFileName, _ = url.QueryUnescape(zipFileName)
 	// makeDefaultDirectory 根据zip文件名生成默认的目标目录
 	targetDirectory = makeDefaultDirectory(zipFileName, targetDirectory)
 	// 打开zip文件以进行读取

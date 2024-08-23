@@ -13,3 +13,11 @@ func TestUnzip(t *testing.T) {
 		t.Errorf("Unzip() error = %v", err)
 	}
 }
+
+func TestZip(t *testing.T) {
+	zipSrcDir := "/Users/ares/Documents/testfolder"
+	err := Zip(zipSrcDir, "/Users/ares/GolandProjects/claymore/testfolder.zip")
+	if err != nil {
+		t.Errorf("Zip() error = %v", err)
+	}
+}
