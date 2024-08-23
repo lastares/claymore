@@ -57,21 +57,21 @@ func Download(url, filepath string) error {
 	return nil
 }
 
-// GetBaseFullName 从给定的文件路径中获取基础名（包含扩展名）。
+// GetFullName 从给定的文件路径中获取基础名（包含扩展名）。
 // filePath 参数是文件路径字符串。
 // f 参数是一个可选的函数，用于对文件路径进行自定义处理。如果为 nil，则不进行任何处理。
 // ps: 使用时请注意，如果传入的路径中并不包含带后缀名的文件名，函数会返回路径中的最后一个路径元素
-func GetBaseFullName(filePath string, f func(filePath string) string) string {
-	// 添加简单的检查以确保 filePath 不为空
-	if filePath == "" {
-		return ""
-	}
+func GetFullName(filePath string, f func(filePath string) string) string {
 	// 有的文件路径需要一些特殊处理逻辑，可由func进行自定义处理,否则直接传nil即可
 	if f != nil {
 		processedPath := f(filePath)
 		if processedPath != "" {
 			filePath = processedPath
 		}
+	}
+	// 添加简单的检查以确保 filePath 不为空
+	if filePath == "" {
+		return ""
 	}
 	// 处理url中中文被编码的问题
 	filePath, _ = neturl.QueryUnescape(filePath)
@@ -101,7 +101,51 @@ func GetBaseFullName(filePath string, f func(filePath string) string) string {
 	return baseName
 }
 
+// GetBaseName 根据文件路径获取文件的基础名称。
+// 此函数主要用于去除文件的扩展名，返回文件的基础名称部分。
+// 参数：
+//
+//	filePath - 文件的路径。可以是绝对路径或相对路径。
+//
+// 返回值：
+//
+//	返回文件的基础名称。如果输入的filePath为空，则返回空字符串。
+func GetBaseName(filePath string) string {
+	// 检查文件路径是否为空
+	if filePath == "" {
+		return ""
+	}
+	// 获取文件的全名，不考虑任何参数
+	fullName := GetFullName(filePath, nil)
+	// 获取文件的扩展名
+	extension := GetExtension(fullName)
+	// 移除文件的扩展名，返回基础名称
+	return strings.TrimSuffix(fullName, extension)
+}
+
 // GetExtension 获取文件扩展名
-func GetExtension(filepath string) string {
-	return path.Ext(filepath)
+func GetExtension(filePath string) string {
+	if filePath == "" {
+		return ""
+	}
+	return path.Ext(filePath)
+}
+
+// GetExtNoDot 函数用于获取文件路径的扩展名，不包括点字符。
+// 如果文件路径为空，则返回空字符串。
+// 参数:
+//
+//	filePath - 文件的路径。
+//
+// 返回值:
+//
+//	文件的扩展名，不包括点字符。如果无法确定扩展名或输入为空，则返回空字符串。
+func GetExtNoDot(filePath string) string {
+	// 当文件路径为空时，直接返回空字符串
+	if filePath == "" {
+		return ""
+	}
+	// 使用path.Ext函数获取文件扩展名，该函数返回的是以点开头的扩展名，这里将其转换为字符串并去除首字符（即点）后返回
+	suffix := []rune(path.Ext(filePath))
+	return string(suffix[1:])
 }
