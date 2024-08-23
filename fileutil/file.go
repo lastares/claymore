@@ -3,6 +3,7 @@ package fileutil
 import (
 	"io"
 	"net/http"
+	neturl "net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -21,6 +22,7 @@ func Download(url, filepath string) error {
 		resp    *http.Response
 		retries = 3 // 最多支持重试3次
 	)
+	url, _ = neturl.QueryUnescape(url)
 	// 创建文件
 	out, err = os.Create(filepath)
 	if err != nil {
@@ -71,7 +73,8 @@ func GetBaseFullName(filePath string, f func(filePath string) string) string {
 			filePath = processedPath
 		}
 	}
-
+	// 处理url中中文被编码的问题
+	filePath, _ = neturl.QueryUnescape(filePath)
 	// 标准化路径中的斜杠，确保与当前操作系统兼容
 	normalizedPath := filepath.FromSlash(filePath)
 	separatorStr := string(filepath.Separator)

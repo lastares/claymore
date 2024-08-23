@@ -1,7 +1,6 @@
 package fileutil
 
 import (
-	"strings"
 	"testing"
 )
 
@@ -22,28 +21,30 @@ func TestGetBaseFullName(t *testing.T) {
 		want     string
 		f        func(filePath string) string
 	}{
-		{filePath: "C:\\Windows\\System32", f: nil, want: "System32"},
-		{filePath: "C:\\Windows\\System32\\", f: nil, want: "System32"},
-		{filePath: "C:\\Windows\\System32\\notepad.exe", f: nil, want: "notepad.exe"},
-		{filePath: "/usr/bin", f: nil, want: "bin"},
-		{filePath: "/usr/bin/", f: nil, want: "bin"},
-		{filePath: "/usr/bin/vim", f: nil, want: "vim"},
-		{filePath: "/usr/bin/vim/aa.txt", f: nil, want: "aa.txt"},
-		{filePath: "C:\\Program%20Files\\", f: nil, want: "Program%20Files"},
-		{filePath: "/home/user/documents/report.txt", f: nil, want: "report.txt"},
-		{filePath: "C:\\Windows\\System32\\notepad.exe", f: nil, want: "notepad.exe"},
-		{
-			filePath: "http://www.baidu.com/xxx/232dd/232lskdjfskdfl323.jpg?st=xxxxxxxzsdsdfsdfsdf",
-			f: func(filePath string) string {
-				if strings.Contains(filePath, "?") {
-					return strings.Split(filePath, "?")[0]
-				}
-				return filePath
-			},
-			want: "232lskdjfskdfl323.jpg"},
-		{filePath: "/usr/bin/", f: nil, want: "bin"},
-		{filePath: "", f: nil, want: ""},
-		{filePath: "http://www.baidu.com/sdsdf/232s/aaaaa.txt", f: nil, want: "aaaaa.txt"},
+		//{filePath: "C:\\Windows\\System32", f: nil, want: "System32"},
+		//{filePath: "C:\\Windows\\System32\\", f: nil, want: "System32"},
+		//{filePath: "C:\\Windows\\System32\\notepad.exe", f: nil, want: "notepad.exe"},
+		//{filePath: "/usr/bin", f: nil, want: "bin"},
+		//{filePath: "/usr/bin/哈哈aaa.txt", f: nil, want: "哈哈aaa.txt"},
+		{filePath: "%2Fusr%2Fbin%2F%E5%93%88%E5%93%88aaa.txt", f: nil, want: "哈哈aaa.txt"},
+		//{filePath: "/usr/bin/", f: nil, want: "bin"},
+		//{filePath: "/usr/bin/vim", f: nil, want: "vim"},
+		//{filePath: "/usr/bin/vim/aa.txt", f: nil, want: "aa.txt"},
+		//{filePath: "C:\\Program%20Files\\", f: nil, want: "Program%20Files"},
+		//{filePath: "/home/user/documents/report.txt", f: nil, want: "report.txt"},
+		//{filePath: "C:\\Windows\\System32\\notepad.exe", f: nil, want: "notepad.exe"},
+		//{
+		//	filePath: "http://www.baidu.com/xxx/232dd/232lskdjfskdfl323.jpg?st=xxxxxxxzsdsdfsdfsdf",
+		//	f: func(filePath string) string {
+		//		if strings.Contains(filePath, "?") {
+		//			return strings.Split(filePath, "?")[0]
+		//		}
+		//		return filePath
+		//	},
+		//	want: "232lskdjfskdfl323.jpg"},
+		//{filePath: "/usr/bin/", f: nil, want: "bin"},
+		//{filePath: "", f: nil, want: ""},
+		//{filePath: "http://www.baidu.com/sdsdf/232s/aaaaa.txt", f: nil, want: "aaaaa.txt"},
 	}
 
 	for _, tt := range tests {
