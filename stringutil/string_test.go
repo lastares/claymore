@@ -1,6 +1,7 @@
 package stringutil
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -33,5 +34,26 @@ func TestSubstr(t *testing.T) {
 		if got != tc.want {
 			t.Errorf("Substr(%q, %d, %d) = %q; want %q", tc.str, tc.start, tc.length, got, tc.want)
 		}
+	}
+}
+
+// 测试 Md5 函数
+func TestMd5(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"hello", "5d41402abc4b2a76b9719d911017c592"},
+		// 添加更多测试用例
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.input, func(t *testing.T) {
+			actual := Md5(tc.input)
+			fmt.Println(actual)
+			if actual != tc.expected {
+				t.Errorf("Md5(%q) = %q; expected %q", tc.input, actual, tc.expected)
+			}
+		})
 	}
 }
