@@ -2,11 +2,14 @@ package fileutil
 
 import (
 	"io"
+	"io/fs"
+	"log"
 	"net/http"
 	neturl "net/url"
 	"os"
 	"path"
 	"path/filepath"
+	"slices"
 	"strings"
 )
 
@@ -148,4 +151,64 @@ func GetExtNoDot(filePath string) string {
 	// 使用path.Ext函数获取文件扩展名，该函数返回的是以点开头的扩展名，这里将其转换为字符串并去除首字符（即点）后返回
 	suffix := []rune(path.Ext(filePath))
 	return string(suffix[1:])
+}
+
+type DirFileListConfig struct {
+	fileterSuffixes []string
+	filterFileNames []string
+	hasPrefix       bool
+}
+
+type Option func(cfg *DirFileListConfig)
+
+func WithFileterSuffixes(suffixes ...string) Option {
+	return func(cfg *DirFileListConfig) {
+		cfg.fileterSuffixes = suffixes
+	}
+}
+
+func WithFilterFileNames(filterFileNames ...string) Option {
+	return func(cfg *DirFileListConfig) {
+		cfg.filterFileNames = filterFileNames
+	}
+}
+
+func WithHasPrefix(hasPrefix bool) Option {
+	return func(cfg *DirFileListConfig) {
+		cfg.hasPrefix = hasPrefix
+	}
+}
+
+func GetDirFileList(dir string, options ...Option) ([]string, error) {
+	cfg := &DirFileListConfig{}
+	for _, option := range options {
+		option(cfg)
+	}
+	cfg.fileterSuffixes = append(cfg.fileterSuffixes, []string{".DS_Store"}...)
+	// 初始化文件路径切片
+	var fullFileNames []string
+	// 使用 filepath.Walk 遍历目录，err 用于接收 filepath.Walk 的执行结果
+	err := filepath.Walk(dir, func(path string, info fs.FileInfo, err error) error {
+		// 如果遍历过程中发生错误，直接返回错误
+		if err != nil {
+			return err
+		}
+		ext := GetExtension(path)
+		// 如果当前路径不是目录，则将其添加到文件路径切片中
+		if !info.IsDir() && !slices.Contains(cfg.filterFileNames, info.Name()) && !slices.Contains(cfg.fileterSuffixes, ext) {
+			fullName := info.Name()
+			if cfg.hasPrefix {
+				fullName = path
+			}
+			fullFileNames = append(fullFileNames, fullName)
+		}
+		return nil
+	})
+	// 如果 filepath.Walk 执行过程中出现错误，记录日志并返回错误
+	if err != nil {
+		log.Printf("Error walking directory: %v", err)
+		return nil, err
+	}
+	// 返回文件路径切片，表示目录遍历成功
+	return fullFileNames, nil
 }

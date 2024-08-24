@@ -1,6 +1,8 @@
 package fileutil
 
 import (
+	"fmt"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -116,5 +118,59 @@ func TestGetExtNoDot(t *testing.T) {
 				t.Errorf("GetExtNoDot(%q) = %q, want %q", tt.filePath, got, tt.want)
 			}
 		})
+	}
+}
+
+// TestGetDirFileList 测试 GetDirFileList 函数
+func TestGetDirFileList(t *testing.T) {
+	// 定义测试用例
+	cases := []struct {
+		dir             string
+		hasPrefix       bool
+		fileterSuffixes []string
+		fileterFiles    []string
+	}{
+		// 添加测试用例：目录路径，是否有前缀
+		{"/Users/ares/GolandProjects/claymore/ziputil", true, []string{}, []string{"zip.go"}},
+		//{"/Users/ares/GolandProjects/claymore/ziputil", true},
+	}
+
+	for _, c := range cases {
+		// 调用待测试的函数
+		files, err := GetDirFileList(c.dir, WithHasPrefix(c.hasPrefix), WithFileterSuffixes(c.fileterSuffixes...), WithFilterFileNames(c.fileterFiles...))
+		for _, file := range files {
+			fmt.Println(file)
+		}
+		// 验证结果是否正确
+		if err != nil {
+			t.Errorf("GetDirFileList(%q, %v) error: %v", c.dir, c.hasPrefix, err)
+		}
+
+		// 验证返回的文件列表是否不为空
+		if len(files) == 0 {
+			t.Errorf("GetDirFileList(%q, %v) returned empty slice", c.dir, c.hasPrefix)
+		}
+
+		// 验证返回的文件列表是否包含预期的文件
+		expectedFiles := []string{"课程专栏.zip", "zip_test.go"}
+		if c.hasPrefix {
+			expectedFiles = []string{
+				filepath.Join(c.dir, "课程专栏.zip"),
+				filepath.Join(c.dir, "zip_test.go"),
+				//filepath.Join(c.dir, "zip.go"),
+			}
+		}
+		for _, expectedFile := range expectedFiles {
+			found := false
+			for _, file := range files {
+				if file == expectedFile {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Errorf("GetDirFileList(%q, %v) did not find expected file: %q", c.dir, c.hasPrefix, expectedFile)
+			}
+		}
 	}
 }
