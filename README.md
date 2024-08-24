@@ -1,4 +1,4 @@
-:tada: :tada: :tada: # Claymore # :tada::tada::tada:
+# Claymore    :tada::tada::tada: :tada::tada::tada:
 
 > 当前包使用的go版本 `go 1.22.6`
 
