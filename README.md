@@ -29,8 +29,9 @@ go开发中经常使用一些工具函数，每次新项目或者到了一个新
 | 001 | Zip   | 压缩zip文件 |
 | 002 | Unzip | 解压zip文件 |
 
-:shipit: :shipit: :shipit: 其他函数持续增加中 :heart: :heart: :heart:
+:shipit: :shipit: :shipit: 其他函数持续增加中... :heart: :heart: :heart:
 
 为了不与一些其他的go工具包中的函数重复，这里列了几个经常使用的其他工具包函数，有兴趣的可以看下
-- 类型转换 https://github.com/spf13/cast
-- 函数工具包 https://github.com/samber/lo
+- [类型转换](https://github.com/spf13/cast) 
+- [泛型函数工具包](https://github.com/samber/lo) 
+- [强大工具函数库](https://github.com/duke-git/lancet)
