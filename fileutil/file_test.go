@@ -2,10 +2,14 @@ package fileutil
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 )
+
+var dir = "/Users/ares/GolandProjects/claymore/ziputil"
 
 func TestDownload(t *testing.T) {
 	testUrl := "http://iph.href.lu/579x200"
@@ -121,6 +125,36 @@ func TestGetExtNoDot(t *testing.T) {
 	}
 }
 
+func TestGetDirFileListV2(t *testing.T) {
+	dir := "/Users/ares/GolandProjects/claymore/ziputil"
+	tests := []struct {
+		dir       string
+		hasPrefix bool
+		want      []string
+	}{
+		// 添加测试用例：目录路径，是否有前缀
+		{dir, false, []string{"zip.go", "zip_test.go", "课程专栏.zip"}},
+		{dir, true, []string{
+			filepath.Join(dir, "zip.go"),
+			filepath.Join(dir, "zip_test.go"),
+			filepath.Join(dir, "课程专栏.zip"),
+		}},
+	}
+	for _, test := range tests {
+		t.Run(test.dir, func(t *testing.T) {
+			got, err := GetDirFileListV2(test.dir, test.hasPrefix)
+			if err != nil {
+				t.Errorf("GetDirFileList(%q) error: %v", test.dir, err)
+			}
+			for _, file := range got {
+				if !slices.Contains(test.want, file) {
+					t.Errorf("GetDirFileList(%q) got unexpected file: %q", test.dir, file)
+				}
+			}
+		})
+	}
+}
+
 // TestGetDirFileList 测试 GetDirFileList 函数
 func TestGetDirFileList(t *testing.T) {
 	// 定义测试用例
@@ -131,7 +165,7 @@ func TestGetDirFileList(t *testing.T) {
 		fileterFiles    []string
 	}{
 		// 添加测试用例：目录路径，是否有前缀
-		{"/Users/ares/GolandProjects/claymore/ziputil", true, []string{}, []string{"zip.go"}},
+		{dir, true, []string{}, []string{"zip.go"}},
 		//{"/Users/ares/GolandProjects/claymore/ziputil", true},
 	}
 
@@ -172,5 +206,37 @@ func TestGetDirFileList(t *testing.T) {
 				t.Errorf("GetDirFileList(%q, %v) did not find expected file: %q", c.dir, c.hasPrefix, expectedFile)
 			}
 		}
+	}
+}
+
+// TestDirOrFileExists 测试 DirOrFileExists 函数
+func TestDirOrFileExists(t *testing.T) {
+	// 定义测试用例
+	tests := []struct {
+		path     string
+		expected bool
+	}{
+		// 添加测试用例：存在的情况
+		{dir, true},             // 当前目录
+		{dir + "/zip.go", true}, // main.go 文件，假定在同一目录下
+		// 添加测试用例：不存在的情况
+		{dir + "/zip1.go", false},
+	}
+
+	for _, test := range tests {
+		t.Run(test.path, func(t *testing.T) {
+			// 调用待测函数
+			exists, err := DirOrFileExists(test.path)
+
+			// 验证结果是否正确
+			if exists != test.expected {
+				t.Errorf("DirOrFileExists(%s) = %v; want %v", test.path, exists, test.expected)
+			}
+
+			// 验证是否有错误发生，除了不存在的情况
+			if err != nil && !os.IsNotExist(err) {
+				t.Errorf("DirOrFileExists(%s) error = %v; want no error", test.path, err)
+			}
+		})
 	}
 }

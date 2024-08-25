@@ -179,6 +179,8 @@ func WithHasPrefix(hasPrefix bool) Option {
 	}
 }
 
+// GetDirFileList 该函数获取指定目录下的所有文件路径列表。
+// ps: 会包括系统自动生成的隐藏文件，如 .DS_Store，注意过滤
 func GetDirFileList(dir string, options ...Option) ([]string, error) {
 	cfg := &DirFileListConfig{}
 	for _, option := range options {
@@ -211,4 +213,45 @@ func GetDirFileList(dir string, options ...Option) ([]string, error) {
 	}
 	// 返回文件路径切片，表示目录遍历成功
 	return fullFileNames, nil
+}
+
+func GetDirFileListV2(dir string, hasPrefix bool) ([]string, error) {
+	fileList, err := os.ReadDir(dir)
+	if err != nil {
+		return nil, err
+	}
+	var fullFileNames []string
+	for _, f := range fileList {
+		fullName := f.Name()
+		if hasPrefix {
+			fullName = filepath.Join(dir, f.Name())
+		}
+		fullFileNames = append(fullFileNames, fullName)
+	}
+	return fullFileNames, nil
+}
+
+// DirOrFileExists 检查指定路径是否存在。
+//
+// 参数:
+//
+//	path - 需要检查的文件或目录路径。
+//
+// 返回值:
+//
+//	第一个返回值表示指定路径的文件或目录是否存在，true表示存在，false表示不存在。
+//	第二个返回值在发生错误时返回错误详情，否则返回nil。
+func DirOrFileExists(path string) (bool, error) {
+	// 尝试获取指定路径的文件或目录的信息。
+	_, err := os.Stat(path)
+	// 如果没有错误，说明文件或目录存在。
+	if err == nil {
+		return true, nil
+	}
+	// 如果错误是“不存在”，则表明文件或目录不存在，返回false和nil。
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	// 如果出现其他错误，将错误返回。
+	return false, err
 }
