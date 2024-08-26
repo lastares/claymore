@@ -1,7 +1,6 @@
 package fileutil
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"slices"
@@ -172,9 +171,6 @@ func TestGetDirFileList(t *testing.T) {
 	for _, c := range cases {
 		// 调用待测试的函数
 		files, err := GetDirFileList(c.dir, WithHasPrefix(c.hasPrefix), WithFileterSuffixes(c.fileterSuffixes...), WithFilterFileNames(c.fileterFiles...))
-		for _, file := range files {
-			fmt.Println(file)
-		}
 		// 验证结果是否正确
 		if err != nil {
 			t.Errorf("GetDirFileList(%q, %v) error: %v", c.dir, c.hasPrefix, err)

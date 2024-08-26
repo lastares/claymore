@@ -190,14 +190,22 @@ func GetDirFileList(dir string, options ...Option) ([]string, error) {
 	// 初始化文件路径切片
 	var fullFileNames []string
 	// 使用 filepath.Walk 遍历目录，err 用于接收 filepath.Walk 的执行结果
+	fileNamesLen, fileSuffixesLen := len(cfg.filterFileNames), len(cfg.fileterSuffixes)
 	err := filepath.Walk(dir, func(path string, info fs.FileInfo, err error) error {
 		// 如果遍历过程中发生错误，直接返回错误
 		if err != nil {
 			return err
 		}
 		ext := GetExtension(path)
+		isFile := !info.IsDir()
+		if fileNamesLen > 0 {
+			isFile = isFile && !slices.Contains(cfg.filterFileNames, info.Name())
+		}
+		if fileSuffixesLen > 0 {
+			isFile = isFile && !slices.Contains(cfg.fileterSuffixes, ext)
+		}
 		// 如果当前路径不是目录，则将其添加到文件路径切片中
-		if !info.IsDir() && !slices.Contains(cfg.filterFileNames, info.Name()) && !slices.Contains(cfg.fileterSuffixes, ext) {
+		if isFile {
 			fullName := info.Name()
 			if cfg.hasPrefix {
 				fullName = path
