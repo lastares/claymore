@@ -58,8 +58,8 @@ func TestMd5(t *testing.T) {
 	}
 }
 
-// TestWriteString 测试 ConcatStrings 函数
-func TestWriteString(t *testing.T) {
+// TestConcatStrings 测试 ConcatStrings 函数
+func TestConcatStrings(t *testing.T) {
 	tests := []struct {
 		name     string
 		elems    []string
