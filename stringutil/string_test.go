@@ -81,6 +81,11 @@ func TestWriteString(t *testing.T) {
 			expected: "",
 		},
 		{
+			name:     "中文拼接",
+			elems:    []string{"你好", " ", "桂林"},
+			expected: "你好 桂林",
+		},
+		{
 			name:     "nil elements",
 			elems:    nil,
 			expected: "",
