@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	"io"
+	"strings"
 )
 
 // Substr 返回字符串 str 从索引 start 开始，长度为 length 的子字符串。
@@ -59,4 +60,24 @@ func Md5(s string) string {
 	// 格式化并返回计算得到的 MD5 哈希值。
 	// "%x" 是用于将二进制数据转换为十六进制字符串的格式说明符。
 	return fmt.Sprintf("%x", h.Sum(nil))
+}
+
+// ConcatStrings 接收一个或多个字符串，并将它们拼接成一个单一的字符串。
+// 如果没有提供任何字符串，则返回空字符串
+func ConcatStrings(elems ...string) string {
+	if len(elems) == 0 {
+		return ""
+	}
+	// 计算所有字符串的总长度
+	n := 0
+	for _, elem := range elems {
+		n += len(elem)
+	}
+	var b strings.Builder
+	// 预先分配足够的空间以减少内存分配
+	b.Grow(n)
+	for _, s := range elems {
+		b.WriteString(s)
+	}
+	return b.String()
 }

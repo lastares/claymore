@@ -57,3 +57,42 @@ func TestMd5(t *testing.T) {
 		})
 	}
 }
+
+// TestWriteString 测试 ConcatStrings 函数
+func TestWriteString(t *testing.T) {
+	tests := []struct {
+		name     string
+		elems    []string
+		expected string
+	}{
+		{
+			name:     "single element",
+			elems:    []string{"hello"},
+			expected: "hello",
+		},
+		{
+			name:     "multiple elements",
+			elems:    []string{"hello", " ", "world"},
+			expected: "hello world",
+		},
+		{
+			name:     "empty elements",
+			elems:    []string{"", ""},
+			expected: "",
+		},
+		{
+			name:     "nil elements",
+			elems:    nil,
+			expected: "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			actual := ConcatStrings(tt.elems...)
+			if actual != tt.expected {
+				t.Errorf("ConcatStrings(%v) = %q, expected %q", tt.elems, actual, tt.expected)
+			}
+		})
+	}
+}
