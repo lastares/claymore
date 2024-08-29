@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package pagination;
 
-option go_package = "./pagination";
+option go_package = ".;pagination";
 
 message Pagination {
   int32 page = 1;

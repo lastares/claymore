@@ -1,10 +1,10 @@
-package generalutil
+package pagination
 
 import (
 	"encoding/json"
 	"testing"
 
-	"github.com/lastares/claymore/generalutil/pagination"
+	"github.com/lastares/claymore/protobuf/pagination"
 )
 
 func TestNewPaginator(t *testing.T) {

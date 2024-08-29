@@ -1,17 +1,17 @@
-package generalutil
+package pagination
 
 import (
 	"math"
 
-	"github.com/lastares/claymore/generalutil/pagination"
+	"github.com/lastares/claymore/protobuf/pagination"
 )
 
 type Paginator[T any] struct {
 	List       T
-	Pagination *PaginationBuilder
+	Pagination *Builder
 }
 
-type PaginationBuilder struct {
+type Builder struct {
 	Page       int
 	PageSize   int
 	Total      int
@@ -32,55 +32,55 @@ func NewPaginator[T any](total int, list T, p *pagination.Pagination) *Paginator
 }
 
 // NewPaginationBuilder 创建一个新的空的 PaginationBuilder 实例
-func NewPaginationBuilder(total int) *PaginationBuilder {
-	return &PaginationBuilder{
+func NewPaginationBuilder(total int) *Builder {
+	return &Builder{
 		Total: total,
 	}
 }
 
-func (pb *PaginationBuilder) setPage(page int) {
+func (pb *Builder) setPage(page int) {
 	if page == 0 {
 		page = 1
 	}
 	pb.Page = page
 }
 
-func (pb *PaginationBuilder) setPageSize(pageSize int) {
+func (pb *Builder) setPageSize(pageSize int) {
 	if pageSize == 0 {
 		pageSize = 10
 	}
 	pb.PageSize = pageSize
 }
 
-func (pb *PaginationBuilder) WithPagination(p *pagination.Pagination) *PaginationBuilder {
+func (pb *Builder) WithPagination(p *pagination.Pagination) *Builder {
 	pb.setPage(int(p.Page))
 	pb.setPageSize(int(p.PageSize))
 	return pb
 }
 
-func (pb *PaginationBuilder) setTotalPages() {
+func (pb *Builder) setTotalPages() {
 	pb.TotalPages = int(math.Ceil(float64(pb.Total) / float64(pb.PageSize)))
 }
 
-func (pb *PaginationBuilder) setPrev() {
+func (pb *Builder) setPrev() {
 	if pb.Page > 1 {
 		pb.Prev = max(1, pb.Page-1)
 	}
 }
 
-func (pb *PaginationBuilder) setNext() {
+func (pb *Builder) setNext() {
 	if pb.TotalPages > 1 && pb.Page < pb.TotalPages {
 		pb.Next = min(pb.TotalPages, pb.Page+1)
 	}
 }
 
 // HasMore
-func (pb *PaginationBuilder) setHasMore() {
+func (pb *Builder) setHasMore() {
 	pb.HasMore = pb.Page < pb.TotalPages
 }
 
 // Build 构建最终的 PaginationBuilder 实例
-func (pb *PaginationBuilder) Build() *PaginationBuilder {
+func (pb *Builder) Build() *Builder {
 	pb.setTotalPages()
 	pb.setPrev()
 	pb.setNext()
