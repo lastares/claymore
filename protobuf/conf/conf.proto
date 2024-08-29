@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package conf;
+
+option  go_package = ".;conf";
+
+import "google/protobuf/duration.proto";
+
+message App {
+  string name = 1;
+  string version = 2;
+  string env = 3;
+}
+
+message Data {
+  message Database {
+    string driver = 1;
+    string source = 2;
+    int32 max_open_connections = 3;
+    int32 max_idle_connections = 4;
+    google.protobuf.Duration connection_life_time = 5;
+  }
+  Database database = 1;
+}
