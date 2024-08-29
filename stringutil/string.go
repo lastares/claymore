@@ -81,3 +81,24 @@ func ConcatStrings(elems ...string) string {
 	}
 	return b.String()
 }
+
+// StrToByte 将字符串转换为字节切片。
+// 参数:
+//   - s: 需要转换的字符串。
+//
+// 返回值:
+//
+//	返回转换后的字节切片。
+func StrToByte(s string) []byte {
+	return []byte(s)
+}
+
+// ByteToStr 将字节切片转换为字符串
+// 参数:
+//   - b []byte: 要转换的字节切片
+//
+// 返回值:
+//   - string: 转换后的字符串
+func ByteToStr(b []byte) string {
+	return string(b)
+}

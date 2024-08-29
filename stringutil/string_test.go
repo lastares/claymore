@@ -101,3 +101,74 @@ func TestConcatStrings(t *testing.T) {
 		})
 	}
 }
+
+// TestStrToByte is a test function for StrToByte.
+func TestStrToByte(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected []byte
+	}{
+		{
+			name:     "Empty string",
+			input:    "",
+			expected: []byte{},
+		},
+		{
+			name:     "Simple string",
+			input:    "hello",
+			expected: []byte("hello"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			actual := StrToByte(tt.input)
+			fmt.Println(string(actual))
+			if len(actual) != len(tt.expected) {
+				t.Errorf("StrToByte(%q) expected length %d, actual length %d", tt.input, len(tt.expected), len(actual))
+				return
+			}
+
+			for i, v := range actual {
+				if v != tt.expected[i] {
+					t.Errorf("StrToByte(%q) expected byte %v at index %d, actual byte %v", tt.input, tt.expected[i], i, v)
+					return
+				}
+			}
+		})
+	}
+}
+
+func TestByteToStr(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    []byte
+		expected string
+	}{
+		{
+			name:     "Empty slice",
+			input:    []byte{},
+			expected: "",
+		},
+		{
+			name:     "Valid string",
+			input:    []byte("Hello, World!"),
+			expected: "Hello, World!",
+		},
+		{
+			name:     "Special characters",
+			input:    []byte{0xFF, 0xFE, 0xFD},
+			expected: string([]byte{0xFF, 0xFE, 0xFD}),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			actual := ByteToStr(tt.input)
+			if actual != tt.expected {
+				t.Errorf("ByteToStr(%v): expected %q, actual %q", tt.input, tt.expected, actual)
+			}
+		})
+	}
+}
