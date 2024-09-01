@@ -3,6 +3,7 @@ module github.com/lastares/claymore
 go 1.22.6
 
 require (
+	golang.org/x/sync v0.8.0
 	golang.org/x/text v0.17.0
 	google.golang.org/protobuf v1.34.2
 	gorm.io/driver/mysql v1.5.7
