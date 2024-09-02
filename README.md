@@ -18,7 +18,7 @@ go开发中经常使用一些工具函数，每次新项目或者到了一个新
 | 005 | GetExtNoDot      | 获取文件后缀(不带点)            |
 | 006 | GetDirFileList   | 获取某个目录下的所有文件           |
 | 007 | GetDirFileListV2 | 获取某个目录下的所有文件(不包含多级子目录) |
-| 007 | DirOrFileExists  | 判断本地文件或目录是否存在          |                   |
+| 008 | DirOrFileExists  | 判断本地文件或目录是否存在          |                   |
 
 ### 字符串(stringutil) ###
 
@@ -28,6 +28,7 @@ go开发中经常使用一些工具函数，每次新项目或者到了一个新
 | 002 | Md5       | 生成 md5 hash 值 |
 | 003 | StrToByte | 字符串转byte      |
 | 004 | ByteToStr | byte转字符串      |
+| 004 | Reverse   | 字符串反转         |
 
 ### 解压缩(ziputil) ###
 
@@ -66,7 +67,7 @@ go开发中经常使用一些工具函数，每次新项目或者到了一个新
 | 编号  | 函数                  | 功能           |
 |-----|---------------------|--------------|
 | 001 | NewPaginator()      | 基于泛型的通用分页构造器 |
-| 001 | PrettyPrintStruct() | 优雅的打印结构体     |
+| 002 | PrettyPrintStruct() | 优雅的打印结构体     |
 
 :shipit: :shipit: :shipit: 其他函数持续增加中... :heart: :heart: :heart:
 

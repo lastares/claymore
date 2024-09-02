@@ -15,7 +15,7 @@ import (
 func New(dbConfig *conf.Data_Database, gormConfig gorm.Config) (*gorm.DB, error) {
 	mysqlConfig := InitConfig(
 		WithDriver(dbConfig.Driver),
-		DSN(dbConfig.Source),
+		WithDSN(dbConfig.Source),
 		DefaultStringSize(256), // 为字符串(string)字段设置大小。默认情况下，对于没有大小、没有主键、没有定义索引且没有默认值的字段，将使用db类型“longext”
 
 		DisableDatetimePrecision(true),  // 禁用日期时间精度支持。但是这在MySQL 5.6之前不支持

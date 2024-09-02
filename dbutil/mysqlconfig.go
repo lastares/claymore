@@ -6,8 +6,8 @@ import (
 
 type Config func(*mysql.Config)
 
-// DSN data source name
-func DSN(dsn string) Config {
+// WithDSN data source name
+func WithDSN(dsn string) Config {
 	return func(c *mysql.Config) {
 		c.DSN = dsn
 	}

@@ -172,3 +172,26 @@ func TestByteToStr(t *testing.T) {
 		})
 	}
 }
+
+// TestReverse 测试 Reverse 函数是否按预期工作
+func TestReverse(t *testing.T) {
+	testCases := []struct {
+		input    string
+		expected string
+	}{
+		{"hello世界东方", "方东界世olleh"},
+		{"world", "dlrow"},
+		{"", ""},
+		{"12345", "54321"},
+		{"走你", "你走"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.input, func(t *testing.T) {
+			actual := Reverse(tc.input)
+			if actual != tc.expected {
+				t.Errorf("Reverse(%q) = %q; expected %q", tc.input, actual, tc.expected)
+			}
+		})
+	}
+}
